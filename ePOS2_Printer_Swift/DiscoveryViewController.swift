@@ -1,7 +1,7 @@
 import UIKit
 
 protocol DiscoveryViewDelegate {
-    func discoveryView(sendor:DiscoveryViewController, onSelectPrinterTarget target:String)
+    func discoveryView(_ sendor:DiscoveryViewController, onSelectPrinterTarget target:String)
 }
 
 class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, Epos2DiscoveryDelegate {
@@ -9,8 +9,8 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBOutlet weak var printerView: UITableView!
     
-    private var printerList: [Epos2DeviceInfo] = []
-    private var filterOption: Epos2FilterOption = Epos2FilterOption()
+    fileprivate var printerList: [Epos2DeviceInfo] = []
+    fileprivate var filterOption: Epos2FilterOption = Epos2FilterOption()
     
     var delegate: DiscoveryViewDelegate?
     
@@ -27,7 +27,7 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         // Dispose of any resources that can be recreated.
 
     }
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         let result = Epos2Discovery.start(filterOption, delegate: self)
@@ -36,7 +36,7 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         }
         printerView.reloadData()
     }
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         while Epos2Discovery.stop() == EPOS2_ERR_PROCESSING.rawValue {
@@ -45,10 +45,10 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         
         printerList.removeAll()
     }
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rowNumber: Int = 0
         if section == 0 {
             rowNumber = printerList.count
@@ -58,11 +58,11 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         }
         return rowNumber
     }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "basis-cell"
-        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier(identifier)
+        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: identifier)
         if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: identifier)
+            cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: identifier)
         }
         
         if indexPath.section == 0 {
@@ -78,16 +78,16 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         
         return cell!
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             if delegate != nil {
                 delegate!.discoveryView(self, onSelectPrinterTarget: printerList[indexPath.row].target)
                 delegate = nil
-                navigationController?.popToRootViewControllerAnimated(true)
+                navigationController?.popToRootViewController(animated: true)
             }
         }
         else {
-            performSelectorOnMainThread("connectDevice", withObject:self, waitUntilDone:false)
+            performSelector(onMainThread: #selector(DiscoveryViewController.connectDevice), with:self, waitUntilDone:false)
         }
 
     }
@@ -97,18 +97,18 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
         
         let btConnection = Epos2BluetoothConnection()
         let BDAddress = NSMutableString()
-        let result = btConnection.connectDevice(BDAddress)
+        let result = btConnection?.connectDevice(BDAddress)
         if result == EPOS2_SUCCESS.rawValue {
             delegate?.discoveryView(self, onSelectPrinterTarget: BDAddress as String)
             delegate = nil
-            self.navigationController?.popToRootViewControllerAnimated(true)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         else {
             Epos2Discovery.start(filterOption, delegate:self)
             printerView.reloadData()
         }
     }
-    @IBAction func restartDiscovery(sender: AnyObject) {
+    @IBAction func restartDiscovery(_ sender: AnyObject) {
         var result = EPOS2_SUCCESS.rawValue;
         
         while true {
@@ -133,7 +133,7 @@ class DiscoveryViewController: UIViewController, UITableViewDataSource, UITableV
             MessageView.showErrorEpos(result, method:"start")
         }
     }
-    func onDiscovery(deviceInfo: Epos2DeviceInfo!) {
+    func onDiscovery(_ deviceInfo: Epos2DeviceInfo!) {
         printerList.append(deviceInfo)
         printerView.reloadData()
     }

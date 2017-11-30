@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		430BC5F01C04264E00345D17 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 430BC5EB1C04264E00345D17 /* button.png */; };
 		430BC5F11C04264E00345D17 /* coffee.png in Resources */ = {isa = PBXBuildFile; fileRef = 430BC5EC1C04264E00345D17 /* coffee.png */; };
-		430BC5F21C04264E00345D17 /* libepos2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 430BC5EE1C04264E00345D17 /* libepos2.a */; };
 		430BC5F31C04264E00345D17 /* store.png in Resources */ = {isa = PBXBuildFile; fileRef = 430BC5EF1C04264E00345D17 /* store.png */; };
 		432F61371BF18FC00003B0D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432F61361BF18FC00003B0D6 /* AppDelegate.swift */; };
 		432F61391BF18FC00003B0D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432F61381BF18FC00003B0D6 /* ViewController.swift */; };
@@ -23,13 +22,12 @@
 		4396F81A1C07EEF3004888B2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4396F81C1C07EEF3004888B2 /* Localizable.strings */; };
 		4396F81E1C07F27A004888B2 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396F81D1C07F27A004888B2 /* MessageView.swift */; };
 		43EC04131BF420B500806EB8 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43EC04121BF420B500806EB8 /* CustomPickerView.swift */; };
+		F0B69D0E1FCFBEC50043DE99 /* libepos2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B69D0D1FCFBEC50043DE99 /* libepos2.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		430BC5EB1C04264E00345D17 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
 		430BC5EC1C04264E00345D17 /* coffee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coffee.png; sourceTree = "<group>"; };
-		430BC5ED1C04264E00345D17 /* ePOS2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ePOS2.h; path = ../../libs/ePOS2.h; sourceTree = "<group>"; };
-		430BC5EE1C04264E00345D17 /* libepos2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libepos2.a; path = ../libs/libepos2.a; sourceTree = "<group>"; };
 		430BC5EF1C04264E00345D17 /* store.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = store.png; sourceTree = "<group>"; };
 		432F61331BF18FC00003B0D6 /* ePOS2_Printer_Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ePOS2_Printer_Swift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		432F61361BF18FC00003B0D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -46,6 +44,8 @@
 		4396F81B1C07EEF3004888B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4396F81D1C07F27A004888B2 /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		43EC04121BF420B500806EB8 /* CustomPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
+		F0B69D0C1FCFBE720043DE99 /* ePOS2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ePOS2.h; sourceTree = "<group>"; };
+		F0B69D0D1FCFBEC50043DE99 /* libepos2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libepos2.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +54,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4381C1091C05773C0018A1E9 /* ExternalAccessory.framework in Frameworks */,
+				F0B69D0E1FCFBEC50043DE99 /* libepos2.a in Frameworks */,
 				4381C10B1C05775C0018A1E9 /* libxml2.2.tbd in Frameworks */,
-				430BC5F21C04264E00345D17 /* libepos2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 		432F61351BF18FC00003B0D6 /* ePOS2_Printer_Swift */ = {
 			isa = PBXGroup;
 			children = (
-				430BC5ED1C04264E00345D17 /* ePOS2.h */,
+				F0B69D0C1FCFBE720043DE99 /* ePOS2.h */,
 				43899CC51C06C76900E1977E /* wmark.png */,
 				430BC5EB1C04264E00345D17 /* button.png */,
 				430BC5EC1C04264E00345D17 /* coffee.png */,
@@ -105,7 +105,7 @@
 		43899CC71C06F04500E1977E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				430BC5EE1C04264E00345D17 /* libepos2.a */,
+				F0B69D0D1FCFBEC50043DE99 /* libepos2.a */,
 				4381C10A1C05775C0018A1E9 /* libxml2.2.tbd */,
 				4381C1081C05773C0018A1E9 /* ExternalAccessory.framework */,
 			);
@@ -144,6 +144,7 @@
 				TargetAttributes = {
 					432F61321BF18FC00003B0D6 = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0830;
 					};
 				};
 			};
@@ -320,9 +321,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../libs,
+					"$(PROJECT_DIR)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.ePOS2-PrinterS";
 				PRODUCT_NAME = ePOS2_Printer_Swift;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -336,9 +339,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../libs,
+					"$(PROJECT_DIR)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.ePOS2-PrinterS";
 				PRODUCT_NAME = ePOS2_Printer_Swift;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

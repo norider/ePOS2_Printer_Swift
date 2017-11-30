@@ -64,7 +64,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         
         printerPicker = CustomPickerView()
         langPicker = CustomPickerView()
-        let window = UIApplication.sharedApplication().keyWindow
+        let window = UIApplication.shared.keyWindow
         if (window != nil) {
             window!.addSubview(printerPicker!)
             window!.addSubview(langPicker!)
@@ -80,9 +80,9 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         langPicker!.dataSource = langList
         
         valuePrinterSeries = printerList!.valueItem(0) as! Epos2PrinterSeries
-        buttonPrinterSeries.setTitle(printerList!.textItem(0), forState:UIControlState.Normal)
+        buttonPrinterSeries.setTitle(printerList!.textItem(0), for:UIControlState())
         valuePrinterModel = langList!.valueItem(0) as! Epos2ModelLang
-        buttonLang.setTitle(langList!.textItem(0), forState:UIControlState.Normal)
+        buttonLang.setTitle(langList!.textItem(0), for:UIControlState())
         
         setDoneToolbar()
         
@@ -98,22 +98,22 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
     }
     
     func setDoneToolbar() {
-        let doneToolbar = UIToolbar(frame: CGRectMake(0, 0, self.view.frame.size.width, 44))
-        doneToolbar.barStyle = UIBarStyle.BlackTranslucent
+        let doneToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 44))
+        doneToolbar.barStyle = UIBarStyle.blackTranslucent
         
         doneToolbar.sizeToFit()
-        let space = UIBarButtonItem(barButtonSystemItem:UIBarButtonSystemItem.FlexibleSpace, target:self, action:nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem:UIBarButtonSystemItem.Done, target:self, action:"doneKeyboard:")
+        let space = UIBarButtonItem(barButtonSystemItem:UIBarButtonSystemItem.flexibleSpace, target:self, action:nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem:UIBarButtonSystemItem.done, target:self, action:#selector(ViewController.doneKeyboard(_:)))
         
         doneToolbar.setItems([space, doneButton], animated:true)
         textTarget.inputAccessoryView = doneToolbar
     }
     
-    func doneKeyboard(sender: AnyObject) {
+    func doneKeyboard(_ sender: AnyObject) {
         textTarget.resignFirstResponder()
     }
 
-    @IBAction func didTouchUpInside(sender: AnyObject) {
+    @IBAction func didTouchUpInside(_ sender: AnyObject) {
         textTarget.resignFirstResponder()
         
         switch sender.tag {
@@ -138,23 +138,23 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         }
     }
     
-    func customPickerView(pickerView: CustomPickerView, didSelectItem text: String, itemValue value: Any) {
+    func customPickerView(_ pickerView: CustomPickerView, didSelectItem text: String, itemValue value: Any) {
         if pickerView == printerPicker {
-            self.buttonPrinterSeries.setTitle(text, forState:UIControlState.Normal)
+            self.buttonPrinterSeries.setTitle(text, for:UIControlState())
             self.valuePrinterSeries = value as! Epos2PrinterSeries
         }
         if pickerView == langPicker {
-            self.buttonLang.setTitle(text, forState:UIControlState.Normal)
+            self.buttonLang.setTitle(text, for:UIControlState())
             self.valuePrinterModel = value as! Epos2ModelLang
         }
     }
     
-    func updateButtonState(state: Bool) {
-        buttonDiscovery.enabled = state
-        buttonLang.enabled = state
-        buttonPrinterSeries.enabled = state
-        buttonReceipt.enabled = state
-        buttonCoupon.enabled = state
+    func updateButtonState(_ state: Bool) {
+        buttonDiscovery.isEnabled = state
+        buttonLang.isEnabled = state
+        buttonPrinterSeries.isEnabled = state
+        buttonReceipt.isEnabled = state
+        buttonCoupon.isEnabled = state
         
     }
     
@@ -217,7 +217,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false;
         }
         
-        result = printer!.addImage(logoData, x: 0, y:0,
+        result = printer!.add(logoData, x: 0, y:0,
             width:Int(logoData!.size.width),
             height:Int(logoData!.size.height),
             color:EPOS2_COLOR_1.rawValue,
@@ -238,12 +238,12 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false
         }
         
-        textData.appendString("THE STORE 123 (555) 555 – 5555\n")
-        textData.appendString("STORE DIRECTOR – John Smith\n")
-        textData.appendString("\n")
-        textData.appendString("7/01/07 16:58 6153 05 0191 134\n")
-        textData.appendString("ST# 21 OP# 001 TE# 01 TR# 747\n")
-        textData.appendString("------------------------------\n")
+        textData.append("THE STORE 123 (555) 555 – 5555\n")
+        textData.append("STORE DIRECTOR – John Smith\n")
+        textData.append("\n")
+        textData.append("7/01/07 16:58 6153 05 0191 134\n")
+        textData.append("ST# 21 OP# 001 TE# 01 TR# 747\n")
+        textData.append("------------------------------\n")
         result = printer!.addText(textData as String)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addText")
@@ -252,19 +252,19 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         textData.setString("")
         
         // Section 2 : Purchaced items
-        textData.appendString("400 OHEIDA 3PK SPRINGF  9.99 R\n")
-        textData.appendString("410 3 CUP BLK TEAPOT    9.99 R\n")
-        textData.appendString("445 EMERIL GRIDDLE/PAN 17.99 R\n")
-        textData.appendString("438 CANDYMAKER ASSORT   4.99 R\n")
-        textData.appendString("474 TRIPOD              8.99 R\n")
-        textData.appendString("433 BLK LOGO PRNTED ZO  7.99 R\n")
-        textData.appendString("458 AQUA MICROTERRY SC  6.99 R\n")
-        textData.appendString("493 30L BLK FF DRESS   16.99 R\n")
-        textData.appendString("407 LEVITATING DESKTOP  7.99 R\n")
-        textData.appendString("441 **Blue Overprint P  2.99 R\n")
-        textData.appendString("476 REPOSE 4PCPM CHOC   5.49 R\n")
-        textData.appendString("461 WESTGATE BLACK 25  59.99 R\n")
-        textData.appendString("------------------------------\n")
+        textData.append("400 OHEIDA 3PK SPRINGF  9.99 R\n")
+        textData.append("410 3 CUP BLK TEAPOT    9.99 R\n")
+        textData.append("445 EMERIL GRIDDLE/PAN 17.99 R\n")
+        textData.append("438 CANDYMAKER ASSORT   4.99 R\n")
+        textData.append("474 TRIPOD              8.99 R\n")
+        textData.append("433 BLK LOGO PRNTED ZO  7.99 R\n")
+        textData.append("458 AQUA MICROTERRY SC  6.99 R\n")
+        textData.append("493 30L BLK FF DRESS   16.99 R\n")
+        textData.append("407 LEVITATING DESKTOP  7.99 R\n")
+        textData.append("441 **Blue Overprint P  2.99 R\n")
+        textData.append("476 REPOSE 4PCPM CHOC   5.49 R\n")
+        textData.append("461 WESTGATE BLACK 25  59.99 R\n")
+        textData.append("------------------------------\n")
         
         result = printer!.addText(textData as String)
         if result != EPOS2_SUCCESS.rawValue {
@@ -275,8 +275,8 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
 
         
         // Section 3 : Payment infomation
-        textData.appendString("SUBTOTAL                160.38\n");
-        textData.appendString("TAX                      14.43\n");
+        textData.append("SUBTOTAL                160.38\n");
+        textData.append("TAX                      14.43\n");
         result = printer!.addText(textData as String)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addText")
@@ -308,9 +308,9 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false;
         }
         
-        textData.appendString("CASH                    200.00\n")
-        textData.appendString("CHANGE                   25.19\n")
-        textData.appendString("------------------------------\n")
+        textData.append("CASH                    200.00\n")
+        textData.append("CHANGE                   25.19\n")
+        textData.append("------------------------------\n")
         result = printer!.addText(textData as String)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addText")
@@ -319,9 +319,9 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         textData.setString("")
         
         // Section 4 : Advertisement
-        textData.appendString("Purchased item total number\n")
-        textData.appendString("Sign Up and Save !\n")
-        textData.appendString("With Preferred Saving Card\n")
+        textData.append("Purchased item total number\n")
+        textData.append("Sign Up and Save !\n")
+        textData.append("With Preferred Saving Card\n")
         result = printer!.addText(textData as String)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addText")
@@ -396,7 +396,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false
         }
         
-        result = printer!.addImage(coffeeData, x:0, y:0,
+        result = printer!.add(coffeeData, x:0, y:0,
             width:Int(coffeeData!.size.width),
             height:Int(coffeeData!.size.height),
             color:EPOS2_PARAM_DEFAULT,
@@ -415,7 +415,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false
         }
         
-        result = printer!.addImage(wmarkData, x:0, y:0,
+        result = printer!.add(wmarkData, x:0, y:0,
             width:Int(wmarkData!.size.width),
             height:Int(wmarkData!.size.height),
             color:EPOS2_PARAM_DEFAULT,
@@ -569,21 +569,21 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         
         result = printer!.endTransaction()
         if result != EPOS2_SUCCESS.rawValue {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 MessageView.showErrorEpos(result, method:"endTransaction")
             })
         }
         
         result = printer!.disconnect()
         if result != EPOS2_SUCCESS.rawValue {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 MessageView.showErrorEpos(result, method:"disconnect")
             })
         }
         
         finalizePrinterObject()
     }
-    func isPrintable(status: Epos2PrinterStatusInfo?) -> Bool {
+    func isPrintable(_ status: Epos2PrinterStatusInfo?) -> Bool {
         if status == nil {
             return false
         }
@@ -600,18 +600,18 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         return true
     }
     
-    func onPtrReceive(printerObj: Epos2Printer!, code: Int32, status: Epos2PrinterStatusInfo!, printJobId: String!) {
+    func onPtrReceive(_ printerObj: Epos2Printer!, code: Int32, status: Epos2PrinterStatusInfo!, printJobId: String!) {
         MessageView.showResult(code, errMessage: makeErrorMessage(status))
         
         dispPrinterWarnings(status)
         updateButtonState(true)
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async(execute: {
             self.disconnectPrinter()
             })
     }
     
-    func dispPrinterWarnings(status: Epos2PrinterStatusInfo?) {
+    func dispPrinterWarnings(_ status: Epos2PrinterStatusInfo?) {
         if status == nil {
             return
         }
@@ -627,65 +627,65 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         }
     }
 
-    func makeErrorMessage(status: Epos2PrinterStatusInfo?) -> String {
+    func makeErrorMessage(_ status: Epos2PrinterStatusInfo?) -> String {
         let errMsg = NSMutableString()
         if status == nil {
             return ""
         }
     
         if status!.online == EPOS2_FALSE {
-            errMsg.appendString(NSLocalizedString("err_offline", comment:""))
+            errMsg.append(NSLocalizedString("err_offline", comment:""))
         }
         if status!.connection == EPOS2_FALSE {
-            errMsg.appendString(NSLocalizedString("err_no_response", comment:""))
+            errMsg.append(NSLocalizedString("err_no_response", comment:""))
         }
         if status!.coverOpen == EPOS2_TRUE {
-            errMsg.appendString(NSLocalizedString("err_cover_open", comment:""))
+            errMsg.append(NSLocalizedString("err_cover_open", comment:""))
         }
         if status!.paper == EPOS2_PAPER_EMPTY.rawValue {
-            errMsg.appendString(NSLocalizedString("err_receipt_end", comment:""))
+            errMsg.append(NSLocalizedString("err_receipt_end", comment:""))
         }
         if status!.paperFeed == EPOS2_TRUE || status!.panelSwitch == EPOS2_SWITCH_ON.rawValue {
-            errMsg.appendString(NSLocalizedString("err_paper_feed", comment:""))
+            errMsg.append(NSLocalizedString("err_paper_feed", comment:""))
         }
         if status!.errorStatus == EPOS2_MECHANICAL_ERR.rawValue || status!.errorStatus == EPOS2_AUTOCUTTER_ERR.rawValue {
-            errMsg.appendString(NSLocalizedString("err_autocutter", comment:""))
-            errMsg.appendString(NSLocalizedString("err_need_recover", comment:""))
+            errMsg.append(NSLocalizedString("err_autocutter", comment:""))
+            errMsg.append(NSLocalizedString("err_need_recover", comment:""))
         }
         if status!.errorStatus == EPOS2_UNRECOVER_ERR.rawValue {
-            errMsg.appendString(NSLocalizedString("err_unrecover", comment:""))
+            errMsg.append(NSLocalizedString("err_unrecover", comment:""))
         }
     
         if status!.errorStatus == EPOS2_AUTORECOVER_ERR.rawValue {
             if status!.autoRecoverError == EPOS2_HEAD_OVERHEAT.rawValue {
-                errMsg.appendString(NSLocalizedString("err_overheat", comment:""))
-                errMsg.appendString(NSLocalizedString("err_head", comment:""))
+                errMsg.append(NSLocalizedString("err_overheat", comment:""))
+                errMsg.append(NSLocalizedString("err_head", comment:""))
             }
             if status!.autoRecoverError == EPOS2_MOTOR_OVERHEAT.rawValue {
-                errMsg.appendString(NSLocalizedString("err_overheat", comment:""))
-                errMsg.appendString(NSLocalizedString("err_motor", comment:""))
+                errMsg.append(NSLocalizedString("err_overheat", comment:""))
+                errMsg.append(NSLocalizedString("err_motor", comment:""))
             }
             if status!.autoRecoverError == EPOS2_BATTERY_OVERHEAT.rawValue {
-                errMsg.appendString(NSLocalizedString("err_overheat", comment:""))
-                errMsg.appendString(NSLocalizedString("err_battery", comment:""))
+                errMsg.append(NSLocalizedString("err_overheat", comment:""))
+                errMsg.append(NSLocalizedString("err_battery", comment:""))
             }
             if status!.autoRecoverError == EPOS2_WRONG_PAPER.rawValue {
-                errMsg.appendString(NSLocalizedString("err_wrong_paper", comment:""))
+                errMsg.append(NSLocalizedString("err_wrong_paper", comment:""))
             }
         }
         if status!.batteryLevel == EPOS2_BATTERY_LEVEL_0.rawValue {
-            errMsg.appendString(NSLocalizedString("err_battery_real_end", comment:""))
+            errMsg.append(NSLocalizedString("err_battery_real_end", comment:""))
         }
     
         return errMsg as String
     }
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "DiscoveryView" {
-            let view: DiscoveryViewController? = segue.destinationViewController as? DiscoveryViewController
+            let view: DiscoveryViewController? = segue.destination as? DiscoveryViewController
             view?.delegate = self
         }
     }
-    func discoveryView(sendor: DiscoveryViewController, onSelectPrinterTarget target: String) {
+    func discoveryView(_ sendor: DiscoveryViewController, onSelectPrinterTarget target: String) {
         textTarget.text = target
     }
 }

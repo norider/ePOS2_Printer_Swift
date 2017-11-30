@@ -1,7 +1,7 @@
 import UIKit
 
 class MessageView {
-    class func showErrorEpos(resultCode:Int32, method:String) {
+    class func showErrorEpos(_ resultCode:Int32, method:String) {
         let msg = String(format: "%@\n%@\n\n%@\n%@\n",
             NSLocalizedString("methoderr_errcode", comment:""),
             getEposErrorText(resultCode),
@@ -10,7 +10,7 @@ class MessageView {
         show(msg)
     }
     
-    class func showErrorEposBt(resultCode:Int32, method:String) {
+    class func showErrorEposBt(_ resultCode:Int32, method:String) {
         let msg = String(format: "%@\n%@\n\n%@\n%@\n",
             NSLocalizedString("methoderr_errcode", comment:""),
             getEposBtErrorText(resultCode),
@@ -19,7 +19,7 @@ class MessageView {
         show(msg)
     }
     
-    class func showResult(code: Int32, errMessage:String) {
+    class func showResult(_ code: Int32, errMessage:String) {
         var msg: String = ""
         
         if errMessage.isEmpty {
@@ -38,12 +38,12 @@ class MessageView {
         show(msg)
     }
     
-    class func show(message:String) {
+    class func show(_ message:String) {
         let alert = UIAlertView(title:"", message: message, delegate:nil, cancelButtonTitle:nil, otherButtonTitles: "OK")
         alert.show()
     }
     
-    class private func getEposErrorText(error : Int32) -> String {
+    class fileprivate func getEposErrorText(_ error : Int32) -> String {
         var errText = ""
         switch (error) {
         case EPOS2_SUCCESS.rawValue:
@@ -104,7 +104,7 @@ class MessageView {
         return errText
     }
     
-    class private func getEposBtErrorText(error : Int32) -> String {
+    class fileprivate func getEposBtErrorText(_ error : Int32) -> String {
         var errText = ""
         switch (error) {
         case EPOS2_BT_SUCCESS.rawValue:
@@ -135,7 +135,7 @@ class MessageView {
         return errText
     }
     
-    class private func getEposResultText(resultCode : Int32) -> String {
+    class fileprivate func getEposResultText(_ resultCode : Int32) -> String {
         var result = ""
         switch (resultCode) {
         case EPOS2_CODE_SUCCESS.rawValue:

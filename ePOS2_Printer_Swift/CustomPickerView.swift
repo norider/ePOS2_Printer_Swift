@@ -1,44 +1,44 @@
 import UIKit
 
 public protocol CustomPickerViewDelegate {
-    func customPickerView(pickerView: CustomPickerView, didSelectItem text: String, itemValue value: Any) -> Void
+    func customPickerView(_ pickerView: CustomPickerView, didSelectItem text: String, itemValue value: Any) -> Void
 }
 
-public class CustomPickerDataSource {
-    private var textItems: [String] = []
-    private var valueItems: [Any] = []
+open class CustomPickerDataSource {
+    fileprivate var textItems: [String] = []
+    fileprivate var valueItems: [Any] = []
     
     var count: Int {
         return textItems.count
     }
-    public func addItem(text: String, value: Any) {
+    open func addItem(_ text: String, value: Any) {
         textItems.append(text)
         valueItems.append(value)
     }
-    func textItem(index: Int) -> String {
+    func textItem(_ index: Int) -> String {
         return textItems[index]
     }
-    func valueItem(index: Int) -> Any {
+    func valueItem(_ index: Int) -> Any {
         return valueItems[index]
     }
 }
 
-public class CustomPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
-    private var backView:UIView!
-    private var baseView:UIView!
-    private var pickerView: UIPickerView!
-    private var toolBar: UIToolbar!
-    private var toolBarItems: [UIBarButtonItem]!
+open class CustomPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
+    fileprivate var backView:UIView!
+    fileprivate var baseView:UIView!
+    fileprivate var pickerView: UIPickerView!
+    fileprivate var toolBar: UIToolbar!
+    fileprivate var toolBarItems: [UIBarButtonItem]!
     
-    public var dataSource: CustomPickerDataSource? {
+    open var dataSource: CustomPickerDataSource? {
         didSet {
             pickerView.reloadAllComponents()
         }
     }
-    public var delegate: CustomPickerViewDelegate!
+    open var delegate: CustomPickerViewDelegate!
     
     convenience public init() {
-        self.init(frame: CGRectMake(0, 0, 100, 100))
+        self.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
     }
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,7 +49,7 @@ public class CustomPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSou
         initializePicker()
     }
     
-    private func initializePicker() {
+    fileprivate func initializePicker() {
         pickerView = UIPickerView()
         toolBar = UIToolbar()
         baseView = UIView()
@@ -59,77 +59,77 @@ public class CustomPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSou
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.showsSelectionIndicator = true
-        toolBar.translucent = true
+        toolBar.isTranslucent = true
         
-        let screenSize = UIScreen.mainScreen().bounds.size
+        let screenSize = UIScreen.main.bounds.size
         let pickerHeight = screenSize.height / 3
         let toolbarHeight:CGFloat = 44
         
-        baseView.bounds = CGRectMake(0, 0, screenSize.width, pickerHeight)
-        baseView.frame = CGRectMake(0, screenSize.height, screenSize.width, pickerHeight)
-        pickerView.bounds = CGRectMake(0, 0, screenSize.width, pickerHeight - toolbarHeight)
-        pickerView.frame = CGRectMake(0, 44, screenSize.width, pickerHeight - toolbarHeight)
-        toolBar.bounds = CGRectMake(0, 0, screenSize.width, toolbarHeight)
-        toolBar.frame = CGRectMake(0, 0, screenSize.width, toolbarHeight)
+        baseView.bounds = CGRect(x: 0, y: 0, width: screenSize.width, height: pickerHeight)
+        baseView.frame = CGRect(x: 0, y: screenSize.height, width: screenSize.width, height: pickerHeight)
+        pickerView.bounds = CGRect(x: 0, y: 0, width: screenSize.width, height: pickerHeight - toolbarHeight)
+        pickerView.frame = CGRect(x: 0, y: 44, width: screenSize.width, height: pickerHeight - toolbarHeight)
+        toolBar.bounds = CGRect(x: 0, y: 0, width: screenSize.width, height: toolbarHeight)
+        toolBar.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: toolbarHeight)
         toolBar.sizeToFit()
         
-        let space = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
-        let doneButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target:self, action:"didTouchDone")
+        let space = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target:self, action:#selector(CustomPickerView.didTouchDone))
         toolBarItems! += [space, doneButtonItem]
         
-        baseView.backgroundColor = UIColor.whiteColor()
-        toolBar.barStyle = UIBarStyle.BlackTranslucent
+        baseView.backgroundColor = UIColor.white
+        toolBar.barStyle = UIBarStyle.blackTranslucent
         
         toolBar.setItems(toolBarItems, animated: true)
         baseView.addSubview(toolBar)
         baseView.addSubview(pickerView)
         
-        self.bounds = CGRectMake(0, 0, screenSize.width, screenSize.height)
-        self.frame = CGRectMake(0, screenSize.height, screenSize.width, screenSize.height)
-        backView.bounds = CGRectMake(0, 0, screenSize.width, screenSize.height)
-        backView.frame = CGRectMake(0, 0, screenSize.width, screenSize.height)
-        backView.backgroundColor = UIColor.grayColor()
+        self.bounds = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+        self.frame = CGRect(x: 0, y: screenSize.height, width: screenSize.width, height: screenSize.height)
+        backView.bounds = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+        backView.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+        backView.backgroundColor = UIColor.gray
         backView.alpha = 0.5
         
         self.addSubview(backView)
         self.addSubview(baseView)
     }
-    public func showPicker() {
-        let screenSize = UIScreen.mainScreen().bounds.size
+    open func showPicker() {
+        let screenSize = UIScreen.main.bounds.size
         let pickerSize = self.baseView.frame.size
 
-        self.frame = CGRectMake(0, 0, screenSize.width, screenSize.height)
-        UIView.animateWithDuration(0.2) {
-            self.baseView.frame = CGRectMake(0, screenSize.height - pickerSize.height, screenSize.width, pickerSize.height)
-        }
+        self.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+        UIView.animate(withDuration: 0.2, animations: {
+            self.baseView.frame = CGRect(x: 0, y: screenSize.height - pickerSize.height, width: screenSize.width, height: pickerSize.height)
+        }) 
     }
     func didTouchDone() {
-        let screenSize = UIScreen.mainScreen().bounds.size
+        let screenSize = UIScreen.main.bounds.size
         let pickerSize = self.baseView.frame.size
         
-        UIView.animateWithDuration(0.2, delay:0.0, options: UIViewAnimationOptions.TransitionNone, animations:{() -> Void in
-                self.baseView.frame = CGRectMake(0, screenSize.height, screenSize.width, pickerSize.height)
+        UIView.animate(withDuration: 0.2, delay:0.0, options: UIViewAnimationOptions(), animations:{() -> Void in
+                self.baseView.frame = CGRect(x: 0, y: screenSize.height, width: screenSize.width, height: pickerSize.height)
             }, completion:{(finished: Bool) -> Void in
-                self.frame = CGRectMake(0, screenSize.height, screenSize.width, screenSize.height)
+                self.frame = CGRect(x: 0, y: screenSize.height, width: screenSize.width, height: screenSize.height)
             })
     }
     
-    public func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    open func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if dataSource == nil {
             return 0
         }
         return 1
     }
-    public func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    open func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if dataSource == nil {
             return 0
         }
         return dataSource!.count
     }
-    public func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    open func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return dataSource?.textItem(row)
     }
-    public func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    open func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if dataSource == nil {
             return
         }
