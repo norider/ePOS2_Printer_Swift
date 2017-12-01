@@ -15,6 +15,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
     @IBOutlet weak var buttonPrinterSeries: UIButton!
     @IBOutlet weak var buttonReceipt: UIButton!
     @IBOutlet weak var buttonCoupon: UIButton!
+    @IBOutlet weak var buttonFonts: UIButton!
     @IBOutlet weak var textWarnings: UITextView!
     @IBOutlet weak var textTarget: UITextField!
 
@@ -26,8 +27,8 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
     
     var printer: Epos2Printer?
     
-    var valuePrinterSeries: Epos2PrinterSeries = EPOS2_TM_M10
-    var valuePrinterModel: Epos2ModelLang = EPOS2_MODEL_ANK
+    var valuePrinterSeries: Epos2PrinterSeries = EPOS2_TM_M30
+    var valuePrinterModel: Epos2ModelLang = EPOS2_MODEL_JAPANESE
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,10 +80,10 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         printerPicker!.dataSource = printerList
         langPicker!.dataSource = langList
         
-        valuePrinterSeries = printerList!.valueItem(0) as! Epos2PrinterSeries
-        buttonPrinterSeries.setTitle(printerList!.textItem(0), for:UIControlState())
-        valuePrinterModel = langList!.valueItem(0) as! Epos2ModelLang
-        buttonLang.setTitle(langList!.textItem(0), for:UIControlState())
+        valuePrinterSeries = printerList!.valueItem(1) as! Epos2PrinterSeries
+        buttonPrinterSeries.setTitle(printerList!.textItem(1), for:UIControlState())
+        valuePrinterModel = langList!.valueItem(1) as! Epos2ModelLang
+        buttonLang.setTitle(langList!.textItem(1), for:UIControlState())
         
         setDoneToolbar()
         
@@ -133,6 +134,12 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
                 updateButtonState(true)
             }
             break
+        case 5:
+            updateButtonState(false)
+            if !runPrinterFontsSequence() {
+                updateButtonState(true)
+            }
+            break
         default:
             break
         }
@@ -155,7 +162,8 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         buttonPrinterSeries.isEnabled = state
         buttonReceipt.isEnabled = state
         buttonCoupon.isEnabled = state
-        
+        buttonFonts.isEnabled = state
+
     }
     
     func runPrinterReceiptSequence() -> Bool {
@@ -186,6 +194,26 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         }
         
         if !createCouponData() {
+            finalizePrinterObject()
+            return false
+        }
+        
+        if !printData() {
+            finalizePrinterObject()
+            return false
+        }
+        
+        return true
+    }
+    
+    func runPrinterFontsSequence() -> Bool {
+        textWarnings.text = ""
+        
+        if !initializePrinterObject() {
+            return false
+        }
+        
+        if !createFontsData() {
             finalizePrinterObject()
             return false
         }
@@ -477,6 +505,163 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false
         }
         
+        result = printer!.addCut(EPOS2_CUT_FEED.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addCut")
+            return false
+        }
+        
+        return true
+    }
+    
+    func createFontsData() -> Bool {
+        var result = EPOS2_SUCCESS.rawValue
+        let textData: NSMutableString = NSMutableString()
+        
+        result = printer!.addTextAlign(EPOS2_ALIGN_CENTER.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextAlign")
+            return false;
+        }
+        
+        result = printer!.addTextLang(EPOS2_LANG_JA.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextLang")
+            return false;
+        }
+        
+        result = printer!.addTextSmooth(EPOS2_TRUE)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextSmooth")
+            return false;
+        }
+        
+        // FONT_A(default)
+        textData.append("Font A\n")
+        textData.append("abcdefghijklmnopqrstuvwxyz\n")
+        textData.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ\n")
+        textData.append("お客さまご案内情報\n")
+
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+        
+        result = printer!.addFeedLine(1)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // FONT_B
+        result = printer!.addTextFont(EPOS2_FONT_B.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextFont")
+            return false;
+        }
+        
+        textData.append("Font B\n")
+        textData.append("abcdefghijklmnopqrstuvwxyz\n")
+        textData.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ\n")
+        textData.append("お客さまご案内情報\n")
+        
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+        
+        result = printer!.addFeedLine(1)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // FONT_C
+        result = printer!.addTextFont(EPOS2_FONT_C.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextFont")
+            return false;
+        }
+        
+        textData.append("Font C\n")
+        textData.append("abcdefghijklmnopqrstuvwxyz\n")
+        textData.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ\n")
+        textData.append("お客さまご案内情報\n")
+        
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+        
+        result = printer!.addFeedLine(1)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // FONT_D
+        result = printer!.addTextFont(EPOS2_FONT_D.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextFont")
+            return false;
+        }
+        
+        textData.append("Font D\n")
+        textData.append("abcdefghijklmnopqrstuvwxyz\n")
+        textData.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ\n")
+        textData.append("お客さまご案内情報\n")
+        
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+        
+        result = printer!.addFeedLine(1)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // FONT_E
+        result = printer!.addTextFont(EPOS2_FONT_E.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextFont")
+            return false;
+        }
+        
+        textData.append("Font E\n")
+        textData.append("abcdefghijklmnopqrstuvwxyz\n")
+        textData.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ\n")
+        textData.append("お客さまご案内情報\n")
+        
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+        
+        result = printer!.addFeedLine(1)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+
+        result = printer!.addFeedLine(2)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // Cut
         result = printer!.addCut(EPOS2_CUT_FEED.rawValue)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addCut")
