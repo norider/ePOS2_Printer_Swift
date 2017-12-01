@@ -27,8 +27,8 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
     
     var printer: Epos2Printer?
     
-    var valuePrinterSeries: Epos2PrinterSeries = EPOS2_TM_M10
-    var valuePrinterModel: Epos2ModelLang = EPOS2_MODEL_ANK
+    var valuePrinterSeries: Epos2PrinterSeries = EPOS2_TM_M30
+    var valuePrinterModel: Epos2ModelLang = EPOS2_MODEL_JAPANESE
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,10 +80,10 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         printerPicker!.dataSource = printerList
         langPicker!.dataSource = langList
         
-        valuePrinterSeries = printerList!.valueItem(0) as! Epos2PrinterSeries
-        buttonPrinterSeries.setTitle(printerList!.textItem(0), for:UIControlState())
-        valuePrinterModel = langList!.valueItem(0) as! Epos2ModelLang
-        buttonLang.setTitle(langList!.textItem(0), for:UIControlState())
+        valuePrinterSeries = printerList!.valueItem(1) as! Epos2PrinterSeries
+        buttonPrinterSeries.setTitle(printerList!.textItem(1), for:UIControlState())
+        valuePrinterModel = langList!.valueItem(1) as! Epos2ModelLang
+        buttonLang.setTitle(langList!.textItem(1), for:UIControlState())
         
         setDoneToolbar()
         
