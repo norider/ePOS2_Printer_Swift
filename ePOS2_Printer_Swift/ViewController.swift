@@ -16,6 +16,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
     @IBOutlet weak var buttonReceipt: UIButton!
     @IBOutlet weak var buttonCoupon: UIButton!
     @IBOutlet weak var buttonFonts: UIButton!
+    @IBOutlet weak var buttonFontSize: UIButton!
     @IBOutlet weak var textWarnings: UITextView!
     @IBOutlet weak var textTarget: UITextField!
 
@@ -140,6 +141,12 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
                 updateButtonState(true)
             }
             break
+        case 6:
+            updateButtonState(false)
+            if !runPrinterFontSizeSequence() {
+                updateButtonState(true)
+            }
+            break
         default:
             break
         }
@@ -163,6 +170,7 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         buttonReceipt.isEnabled = state
         buttonCoupon.isEnabled = state
         buttonFonts.isEnabled = state
+        buttonFontSize.isEnabled = state
 
     }
     
@@ -214,6 +222,26 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
         }
         
         if !createFontsData() {
+            finalizePrinterObject()
+            return false
+        }
+        
+        if !printData() {
+            finalizePrinterObject()
+            return false
+        }
+        
+        return true
+    }
+    
+    func runPrinterFontSizeSequence() -> Bool {
+        textWarnings.text = ""
+        
+        if !initializePrinterObject() {
+            return false
+        }
+        
+        if !createFontSizeData() {
             finalizePrinterObject()
             return false
         }
@@ -655,6 +683,92 @@ class ViewController: UIViewController, DiscoveryViewDelegate, CustomPickerViewD
             return false
         }
 
+        result = printer!.addFeedLine(2)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addFeedLine")
+            return false
+        }
+        
+        // Cut
+        result = printer!.addCut(EPOS2_CUT_FEED.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addCut")
+            return false
+        }
+        
+        return true
+    }
+    
+    func createFontSizeData() -> Bool {
+        var result = EPOS2_SUCCESS.rawValue
+        let textData: NSMutableString = NSMutableString()
+        
+        result = printer!.addTextLang(EPOS2_LANG_JA.rawValue)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextLang")
+            return false;
+        }
+        
+        result = printer!.addTextSmooth(EPOS2_TRUE)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addTextSmooth")
+            return false;
+        }
+        
+        for fontsizeHeight in 1...8 {
+            let fontsizeWidth = 2
+            result = printer!.addTextSize(fontsizeWidth, height:fontsizeHeight)
+            if result != EPOS2_SUCCESS.rawValue {
+                MessageView.showErrorEpos(result, method:"addTextSize")
+                return false
+            }
+                
+            textData.append("あ")
+            result = printer!.addText(textData as String)
+            if result != EPOS2_SUCCESS.rawValue {
+                MessageView.showErrorEpos(result, method:"addText")
+                return false;
+            }
+                textData.setString("")
+        }
+        
+        textData.append("\n")
+        result = printer!.addText(textData as String)
+        if result != EPOS2_SUCCESS.rawValue {
+            MessageView.showErrorEpos(result, method:"addText")
+            return false;
+        }
+        textData.setString("")
+
+        for fontsizeHeight in 1...8 {
+            for fontsizeWidth in 1...6 {
+                result = printer!.addTextSize(fontsizeWidth, height:fontsizeHeight)
+                if result != EPOS2_SUCCESS.rawValue {
+                    MessageView.showErrorEpos(result, method:"addTextSize")
+                    return false
+                }
+
+                switch fontsizeWidth {
+                case 6:
+                    textData.append("あ\n")
+                    result = printer!.addText(textData as String)
+                    if result != EPOS2_SUCCESS.rawValue {
+                        MessageView.showErrorEpos(result, method:"addText")
+                        return false;
+                    }
+                    textData.setString("")
+                default:
+                    textData.append("あ")
+                    result = printer!.addText(textData as String)
+                    if result != EPOS2_SUCCESS.rawValue {
+                        MessageView.showErrorEpos(result, method:"addText")
+                        return false;
+                    }
+                    textData.setString("")
+                }
+            }
+        }
+        
         result = printer!.addFeedLine(2)
         if result != EPOS2_SUCCESS.rawValue {
             MessageView.showErrorEpos(result, method:"addFeedLine")

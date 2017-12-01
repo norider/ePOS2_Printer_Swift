@@ -82,7 +82,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iGg-we-vWL" userLabel="Button Coupon">
-                                <rect key="frame" x="20" y="386" width="280" height="36"/>
+                                <rect key="frame" x="20" y="386" width="158" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Sample Coupon" backgroundImage="button.png">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -115,6 +115,16 @@
                                     <action selector="didTouchUpInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0sl-Li-s8p"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" tag="6" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BYn-xn-3Pa" userLabel="Button FontSize">
+                                <rect key="frame" x="186" y="386" width="158" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Sample Font Size" backgroundImage="button.png">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchUpInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rY6-Qh-Ipe"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -123,6 +133,7 @@
                     <connections>
                         <outlet property="buttonCoupon" destination="iGg-we-vWL" id="PEm-15-czb"/>
                         <outlet property="buttonDiscovery" destination="TsM-XA-oIl" id="mV9-8M-ubq"/>
+                        <outlet property="buttonFontSize" destination="BYn-xn-3Pa" id="1bV-BR-30r"/>
                         <outlet property="buttonFonts" destination="bnS-44-zfH" id="ZxJ-xU-5YE"/>
                         <outlet property="buttonLang" destination="tE0-fV-JAJ" id="Dbc-Xv-0EA"/>
                         <outlet property="buttonPrinterSeries" destination="rR8-0T-ijC" id="Rdq-l7-tAc"/>
